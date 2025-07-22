@@ -70,7 +70,12 @@ function getAlternativePixel(takenPixels, invalidPixel, image) {
   let x = preferredX;
   let y = preferredY;
 
+  let counter = 0; // Counter for iterations
   do {
+    counter++;
+    if (counter % 1000 === 0) {
+      console.log(`getAlternativePixel: Iteration ${counter}, checking (${x}, ${y})`);
+    }
     const { x: newX, y: newY } = getNextCoordinate(
       x,
       y,
@@ -79,6 +84,7 @@ function getAlternativePixel(takenPixels, invalidPixel, image) {
     );
 
     if (newX === preferredX && newY === preferredY) {
+      console.log(`getAlternativePixel: Exceeded all possible coordinates after ${counter} iterations.`);
       throw new Error(
         'Could not find any free pixel. Please file an issue about increasing the canvas size.'
       );
@@ -88,6 +94,7 @@ function getAlternativePixel(takenPixels, invalidPixel, image) {
     }
   } while (takenCoordinates.has(coordinatesToId({ x, y })));
 
+  console.log(`getAlternativePixel: Found free pixel at (${x}, ${y}) after ${counter} iterations.`);
   return { y, x, color, username };
 }
 
